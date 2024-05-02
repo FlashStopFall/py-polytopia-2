@@ -5,12 +5,9 @@ import numpy as np
 
 tick = time.perf_counter()
 
-mapData = []
 domain = 5 #per polytopia
 worldSize = 11 #minimum 11, per Polytopia
 numPlayers = 4 #minimum 2 for gameplay
-viableLines = []
-tribeMap = []
 
 playersPerSize = {"11":9,#perfectly placed
                   "12":9,
@@ -48,20 +45,17 @@ def initializeTribes():
         tribeMap.append([])
         for x in range(worldSize):
             tribeMap[y].append(x)
-    for i in range(worldSize):
+    for y in range(worldSize):
         tribeMap[0][i] = "!"
         tribeMap[1][i] = "!"
         tribeMap[-2][i] = "!"
         tribeMap[-1][i] = "!"
-    for y in range(worldSize):
         for x in range(worldSize):
             tribeMap[y][0] = "!"
             tribeMap[y][1] = "!"
             tribeMap[y][-2] = "!"
             tribeMap[y][-1] = "!"
             
-initializeMap()
-initializeTribes()
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -129,7 +123,8 @@ def tribeSetup():
                 mapFull = True
         
 
-
+initializeMap()
+initializeTribes()
 ### run start
 cls()
 #UNCOMMENT next line to debug tile list data
