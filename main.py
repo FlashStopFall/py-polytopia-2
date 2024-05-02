@@ -7,12 +7,15 @@ import numpy as np
 domain = 5 #per polytopia
 worldSize = 18 #minimum 11, per Polytopia
 numPlayers = 8 #minimum 2 for gameplay
+numHumans = 1
+numComs = numPlayers - numHumans
 
 playersPerSize = {"11":9,#perfectly placed
                   "12":9,
                   "13":9,
-                  "14":16,#perfectly placed | 14 reaches recursion
-                  "17":25
+                  "14":16,#perfectly placed | 14 reaches recursion limit
+                  "17":25,
+                  "18":25 #23 reaches recursion depth limit
                   }
 
 def initializeMap():
@@ -55,10 +58,7 @@ def initializeTribes():
             tribeMap[1][x] = "!"
             tribeMap[-2][x] = "!"
             tribeMap[-1][x] = "!"
-
             
-            
-
 def clear():
     os.system('cls' if os.name=='nt' else 'clear')
 
@@ -119,6 +119,16 @@ def tribeSetup():
                 
         if len(viableLines) == 0:
                 mapFull = True
+##
+"""What if we had settlers like Civ? That would allow more freedom of city placement
+and more options for the player, without having to generate them before.
+
+Players could build new cities anywhere they want that isn't inside of a border.
+Original cities spawn with a 3x3 border, but player-com built cities can be placed anywhere,
+aka no minimum border limit. Wanting to maintain a larger boundary for each city
+would govern new city placement via the player-coms."""
+##
+
 
 tick = time.perf_counter()    
 
