@@ -22,7 +22,7 @@ def initializeMap():
         mapData.append([])
         for j in range(worldSize):
             mapData[i].append([]) #could use lists here to be more human readable, but makes it hard to see whole data list in debug
-            #Originally, below code was in a whole other nested for loop
+            
             mapData[i][j].append(0)#terrain tile type | 0=plains, 3=water, 1=city boundary FOR TESTING, 2=city, 4=mountain,
             mapData[i][j].append(0)#domain | p1, p2,
             mapData[i][j].append(0)#belong to | p1, p2,
@@ -103,9 +103,6 @@ def tribeSetup():
             for x in range(3):
                 mapData[-1 + (randY) + y][-1 + randX + x][0] = 1
         mapData[randY][randX][0] = 2
-        #else:
-        #    tribeSetup()
-
         for y in range(5):
                 for x in range(5):
                     randXRad = 2 + randX - x
@@ -132,6 +129,8 @@ initializeTribes()
 ### run start
 clear()
 #UNCOMMENT next line to debug tile list data
+
+np.set_printoptions(threshold=2000) #keeps np.asarray from condensing when printing (default 1000)
 #print(f"\n{np.asarray(mapData)}")
 #drawMap()
 
