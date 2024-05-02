@@ -3,11 +3,9 @@ import random
 import time
 import numpy as np
 
-tick = time.perf_counter()
-
 domain = 5 #per polytopia
-worldSize = 11 #minimum 11, per Polytopia
-numPlayers = 4 #minimum 2 for gameplay
+worldSize = 18 #minimum 11, per Polytopia
+numPlayers = 8 #minimum 2 for gameplay
 
 playersPerSize = {"11":9,#perfectly placed
                   "12":9,
@@ -45,19 +43,22 @@ def initializeTribes():
         tribeMap.append([])
         for x in range(worldSize):
             tribeMap[y].append(x)
+    drawTribeMap()
     for y in range(worldSize):
-        tribeMap[0][i] = "!"
-        tribeMap[1][i] = "!"
-        tribeMap[-2][i] = "!"
-        tribeMap[-1][i] = "!"
+        tribeMap[y][0] = "!"
+        tribeMap[y][1] = "!"
+        tribeMap[y][-2] = "!"
+        tribeMap[y][-1] = "!"
         for x in range(worldSize):
-            tribeMap[y][0] = "!"
-            tribeMap[y][1] = "!"
-            tribeMap[y][-2] = "!"
-            tribeMap[y][-1] = "!"
+            tribeMap[0][x] = "!"
+            tribeMap[1][x] = "!"
+            tribeMap[-2][x] = "!"
+            tribeMap[-1][x] = "!"
+
+            
             
 
-def cls():
+def clear():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def drawMap():
@@ -97,13 +98,12 @@ def tribeSetup():
     
         randY = random.choice(viableLines)
         randX = random.choice(tribeMap[randY][2:-2])
-        if randX in tribeMap[randY]:
-            for y in range(3):
-                for x in range(3):
-                    mapData[-1 + (randY) + y][-1 + randX + x][0] = 1
-            mapData[randY][randX][0] = 2
-        else:
-            tribeSetup()
+        for y in range(3):
+            for x in range(3):
+                mapData[-1 + (randY) + y][-1 + randX + x][0] = 1
+        mapData[randY][randX][0] = 2
+        #else:
+        #    tribeSetup()
 
         for y in range(5):
                 for x in range(5):
@@ -121,18 +121,23 @@ def tribeSetup():
                 
         if len(viableLines) == 0:
                 mapFull = True
-        
+
+tick = time.perf_counter()    
 
 initializeMap()
 initializeTribes()
+drawTribeMap()
+
 ### run start
-cls()
+clear()
 #UNCOMMENT next line to debug tile list data
 #print(f"\n{np.asarray(mapData)}")
 #drawMap()
-#drawTribeMap()
+
 
 tribeSetup()
+drawTribeMap()
+#print(f"\n{np.asarray(mapData)}")
 drawMap()
 tock = time.perf_counter()
 print(f"Time elapsed: {tock - tick:0.4f}")
