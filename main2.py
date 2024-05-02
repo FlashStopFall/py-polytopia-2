@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 import random
 import time
@@ -43,7 +44,7 @@ def initializeTribes():
         tribeMap.append([])
         for x in range(worldSize):
             tribeMap[y].append(x)
-    drawTribeMap()
+    #drawTribeMap() #debug for initialization
     for y in range(worldSize):
         tribeMap[y][0] = "!"
         tribeMap[y][1] = "!"
@@ -112,7 +113,7 @@ def tribeSetup():
                     if randXRad in tribeMap[randYRad]:
                         tribeMap[randYRad].remove(randXRad)
 
-        posCounter = 2
+        posCounter = 2 # I think I could start this at 0, but there's no reason to since they would always be "!"
         for i in tribeMap[2:-2]:
                 if i.count("!") == len(i):
                     if posCounter in viableLines:
@@ -126,7 +127,7 @@ tick = time.perf_counter()
 
 initializeMap()
 initializeTribes()
-drawTribeMap()
+#drawTribeMap() #debug tool
 
 ### run start
 clear()
@@ -136,7 +137,7 @@ clear()
 
 
 tribeSetup()
-drawTribeMap()
+#drawTribeMap()  # debug tool
 #print(f"\n{np.asarray(mapData)}")
 drawMap()
 tock = time.perf_counter()
