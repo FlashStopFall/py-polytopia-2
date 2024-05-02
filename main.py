@@ -18,6 +18,10 @@ playersPerSize = {"11":9,#perfectly placed
                   "18":25 #23 reaches recursion depth limit
                   }
 
+colors = {
+    "default" = '\033[94m'
+    }
+
 def initializeMap():
     global mapData
     mapData = []
@@ -31,7 +35,7 @@ def initializeMap():
             mapData[i][j].append(0)#belong to | p1, p2,
             mapData[i][j].append(0)#owned by | none, p1, p2, | also determines color/style
             mapData[i][j].append(0)#tile entities | berries, gold, (buildings?),
-            mapData[i][j].append(0)#buildings? or combine with 3?
+            mapData[i][j].append(0)#buildings? or combine with 3? (Or troops? settlers, warriors? Maybe troop ID's?)
 
 def initializeTribes():
     global viableLines
