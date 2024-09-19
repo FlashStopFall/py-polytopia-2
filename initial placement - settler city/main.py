@@ -6,8 +6,8 @@ import numpy as np
 import math
 
 domain = 5 #per polytopia
-worldSize = 18 #minimum 11, per Polytopia
-numPlayers = 5 #minimum 2 for gameplay
+worldSize = 15 #minimum 11, per Polytopia
+numPlayers = 15 #minimum 2 for gameplay
 numHumans = 1
 numComs = numPlayers - numHumans
 
@@ -43,7 +43,7 @@ def initializeTribes():
     global tribeMap
     viableLines = []
     tribeMap = []
-    for i in range(2, worldSize - 2):
+    for i in range(1, worldSize - 1):
         viableLines.append(i)
 
 
@@ -55,14 +55,15 @@ def initializeTribes():
     #drawTribeMap() #debug for initialization
     for y in range(worldSize):
         tribeMap[y][0] = "!"
-        tribeMap[y][1] = "!"
-        tribeMap[y][-2] = "!"
+        #tribeMap[y][1] = "!"
+        #tribeMap[y][-2] = "!"
         tribeMap[y][-1] = "!"
         for x in range(worldSize):
             tribeMap[0][x] = "!"
-            tribeMap[1][x] = "!"
-            tribeMap[-2][x] = "!"
+            #tribeMap[1][x] = "!"
+            #tribeMap[-2][x] = "!"
             tribeMap[-1][x] = "!"
+    # ^^^commented out to allow full map spawnability
     #drawTribeMap() #debug for initialization
 
             
@@ -96,8 +97,8 @@ def tileToChr(value):
 
 def areaTestPlayers(worldWidth, players):
     area = worldWidth**2
-    spawnableAreaCenter = (worldWidth - 4)**2
-    spawnableAreaWithRadius = (worldWidth - 2)**2
+    spawnableAreaCenter = (worldWidth - 2)**2
+    spawnableAreaWithRadius = (worldWidth - 0)**2
     print(f"Area is {area}")
     print(f"Spawnable area centers is {spawnableAreaCenter}")
     print(f"Spawnable area w/ radius is {spawnableAreaWithRadius}")
@@ -106,6 +107,30 @@ def areaTestPlayers(worldWidth, players):
     print(f"Area of possible starting cities = {areaOfPossibleCities}")
     numPossibleCities = math.floor(math.sqrt(areaOfPossibleCities)) ** 2
     print(f"Number of possible cities = {numPossibleCities}")
+
+    domainArea = area / numPlayers
+    print(f"Domain area per capitals (numPlayers) = {domainArea}")
+
+    unclaimedArea = spawnableAreaWithRadius - (numPlayers * 3**2) #could just say * 9 here...
+    print(f"Unclaimed area: {unclaimedArea}")
+
+    avgDistBetweenCities = math.sqrt(domainArea) - 3 #9 cities in a 9x9 world is perfectly placed. distance between all borders = 0
+    print(f"Average distance between city borders: {avgDistBetweenCities}") #target average?
+
+    global minGapBetweenCities
+    minGapBetweenCities = math.floor(avgDistBetweenCities)
+    print(f"Minimum gap between city borders: {minGapBetweenCities}")
+
+    saturationRatio = 1 - (numPlayers / numPossibleCities) + 0.05 # 0.05 is just to tune the ratio
+    ratiodGap = saturationRatio * avgDistBetweenCities
+    print(f"Ratio: {saturationRatio:.2f}. Average gap * satRatio: {ratiodGap:.2f}")
+    global minRatGapBetweenCities
+    minRatGapBetweenCities = max(min(6, math.floor(ratiodGap)), 0)      # max(min(maxn, n), minn)
+    print(f"Minimum Ratio'd gap between city borders: {minRatGapBetweenCities}")
+
+
+
+    print()
 
 
 recursions = 0
@@ -122,20 +147,23 @@ def tribeSetup():
             return #Not having this return allows the code to progress to the next line (randY = random...) before calling tribeSetup()
     
         randY = random.choice(viableLines)
-        randX = random.choice(tribeMap[randY][2:-2])
+        randX = random.choice(tribeMap[randY][1:-1]) #random.choice(tribeMap[randY][2:-2])
         for y in range(3):
             for x in range(3):
                 mapData[-1 + (randY) + y][-1 + randX + x][0] = 1
         mapData[randY][randX][0] = 2
-        for y in range(5):
-                for x in range(5):
-                    randXRad = 2 + randX - x
-                    randYRad = 2 + randY - y
-                    if randXRad in tribeMap[randYRad]:
+
+        borderGap = minRatGapBetweenCities ### from areaTestPlayers !!!!!!!!!!!!!!!!!!!!!!!!!!!
+        minCityGap = (borderGap * 2) + 5 # 3 for radius + 2 (1 on each side) = 0 border gap. =>  + 2 (1 on each side) = 1 border gap. Always odd, could do evens if randomly offset
+        for y in range(minCityGap):
+                for x in range(minCityGap):
+                    randXRad = int((minCityGap - 1) / 2) + randX - x        #randXRad = 2 + randX - x
+                    randYRad = int((minCityGap - 1) / 2) + randY - y
+                    if (worldSize > randYRad > 0) and randXRad in tribeMap[randYRad]: #this line automatically takes care of randXRad points outside of 0-worldSize (worldSize < randXRad < 0)
                         tribeMap[randYRad].remove(randXRad)
 
-        posCounter = 2 # I think I could start this at 0, but there's no reason to since they would always be "!"
-        for i in tribeMap[2:-2]:
+        posCounter = 1 # I think I could start this at 0, but there's no reason to since they would always be "!"
+        for i in tribeMap[1:-1]: #tribeMap[2:-2]
                 if i.count("!") == len(i):
                     if posCounter in viableLines:
                         viableLines.remove(posCounter)
@@ -156,7 +184,7 @@ would govern new city placement via the player-coms."""
 
 
 
-areaTestPlayers(worldSize, numPlayers)
+areaTestPlayers(worldSize, numPlayers) # A debug command
 
 
 
