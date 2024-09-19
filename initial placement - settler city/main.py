@@ -19,7 +19,7 @@ playersPerSize = {"11":9,#perfectly placed
                   }
 
 colors = {
-    "default" = '\033[94m'
+    "default" : '\033[94m'
     }
 
 def initializeMap():
