@@ -3,10 +3,11 @@ import os
 import random
 import time
 import numpy as np
+import math
 
 domain = 5 #per polytopia
 worldSize = 18 #minimum 11, per Polytopia
-numPlayers = 8 #minimum 2 for gameplay
+numPlayers = 5 #minimum 2 for gameplay
 numHumans = 1
 numComs = numPlayers - numHumans
 
@@ -62,6 +63,8 @@ def initializeTribes():
             tribeMap[1][x] = "!"
             tribeMap[-2][x] = "!"
             tribeMap[-1][x] = "!"
+    #drawTribeMap() #debug for initialization
+
             
 def clear():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -91,14 +94,31 @@ def tileToChr(value):
     if value == 2:
         return chr(9608)
 
+def areaTestPlayers(worldWidth, players):
+    area = worldWidth**2
+    spawnableAreaCenter = (worldWidth - 4)**2
+    spawnableAreaWithRadius = (worldWidth - 2)**2
+    print(f"Area is {area}")
+    print(f"Spawnable area centers is {spawnableAreaCenter}")
+    print(f"Spawnable area w/ radius is {spawnableAreaWithRadius}")
+
+    areaOfPossibleCities  = spawnableAreaWithRadius/(3**2)
+    print(f"Area of possible starting cities = {areaOfPossibleCities}")
+    numPossibleCities = math.floor(math.sqrt(areaOfPossibleCities)) ** 2
+    print(f"Number of possible cities = {numPossibleCities}")
+
+
+recursions = 0
 def tribeSetup():
     mapFull = False
+    global recursions
     for i in range(numPlayers):
         if mapFull == True:
             print("No available positions left. Map is full. Retrying...")
             initializeMap()
             initializeTribes()
             tribeSetup()
+            recursions += 1
             return #Not having this return allows the code to progress to the next line (randY = random...) before calling tribeSetup()
     
         randY = random.choice(viableLines)
@@ -123,6 +143,7 @@ def tribeSetup():
                 
         if len(viableLines) == 0:
                 mapFull = True
+                
 ##
 """What if we had settlers like Civ? That would allow more freedom of city placement
 and more options for the player, without having to generate them before.
@@ -132,6 +153,11 @@ Original cities spawn with a 3x3 border, but player-com built cities can be plac
 aka no minimum border limit. Wanting to maintain a larger boundary for each city
 would govern new city placement via the player-coms."""
 ##
+
+
+
+areaTestPlayers(worldSize, numPlayers)
+
 
 
 tick = time.perf_counter()    
@@ -153,5 +179,6 @@ tribeSetup()
 #drawTribeMap()  # debug tool
 #print(f"\n{np.asarray(mapData)}")
 drawMap()
+print(f"Recursions: {recursions}")
 tock = time.perf_counter()
 print(f"Time elapsed: {tock - tick:0.4f}")
