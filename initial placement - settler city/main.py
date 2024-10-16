@@ -4,6 +4,9 @@ import random
 import time
 import numpy as np
 import math
+import sys
+
+#TODO: fix larger worldsizes
 
 domain = 5 #per polytopia
 worldSize = 18 #minimum 11, max 18, per Polytopia
@@ -143,6 +146,11 @@ def areaTestPlayers(worldWidth, players):
 
     spawnableAreaWithRadius = (worldWidth - 0)**2
     numPossibleCities = math.floor(math.sqrt(spawnableAreaWithRadius/(3**2))) ** 2
+    #print(f"Number of possible cities = {numPossibleCities}")
+    if numPlayers > numPossibleCities:
+        print(f"Maximum number of cities for this worldsize is {numPossibleCities}. You tried to specify {numPlayers}.")
+        sys.exit()
+            
     domainArea = spawnableAreaWithRadius / numPlayers
     avgDistBetweenCities = math.sqrt(domainArea) - 3 #9 cities in a 9x9 world is perfectly placed. distance between all borders = 0
     gapDistRatio = 1 - (numPlayers / numPossibleCities) + 0.05 # 0.05 is just to tune the ratio
