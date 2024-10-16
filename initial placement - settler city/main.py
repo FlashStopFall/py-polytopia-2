@@ -7,7 +7,6 @@ import math
 import sys
 
 #TODO: fix larger worldsizes
-
 domain = 5 #per polytopia
 worldSize = 18 #minimum 11, max 18, per Polytopia
 numPlayers = 36 #minimum 2 for gameplay
