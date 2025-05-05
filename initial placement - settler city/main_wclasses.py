@@ -6,7 +6,6 @@ import numpy as np
 import math
 import sys
 
-        
 
 class worldMap:
     def __init__(self, worldSize=18, numPlayers=36, numHumans=1):
@@ -173,17 +172,20 @@ class worldMap:
             viewMap += "\n"
         print(viewMap)
 
+    def assemble(self):
+        self.initializeMap()
+        self.initializeTribes()
+        self.areaTestPlayers() # A debug command
+        ### run start
+        self.clear()
+        #UNCOMMENT next line to debug tile list data
+        np.set_printoptions(threshold=2000) #keeps np.asarray from condensing when printing (default 1000)
+        #print(f"\n{np.asarray(mapData)}")
+        self.tribeSetup()
+
 tick = time.perf_counter()    
-theWorld = worldMap()
-theWorld.initializeMap()
-theWorld.initializeTribes()
-theWorld.areaTestPlayers() # A debug command
-### run start
-theWorld.clear()
-#UNCOMMENT next line to debug tile list data
-np.set_printoptions(threshold=2000) #keeps np.asarray from condensing when printing (default 1000)
-#print(f"\n{np.asarray(mapData)}")
-theWorld.tribeSetup()
+theWorld = worldMap(18, 8)#change map spawn details here
+theWorld.assemble()
 theWorld.drawMap()
 print(f"Recursions: {theWorld.recursions}")
 tock = time.perf_counter()
