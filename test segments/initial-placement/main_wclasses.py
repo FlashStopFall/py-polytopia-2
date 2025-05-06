@@ -114,7 +114,7 @@ class worldMap:
 
     def tribeSetup(self):
         mapFull = False
-        global recursions
+        #global recursions  ## not needed, needed self.recursions? (below)
         for i in range(self.numPlayers):
             if mapFull == True:
                 print("No available positions left. Map is full. Retrying...")
@@ -123,7 +123,7 @@ class worldMap:
                 self.stratifyTribeMapCheck()
                 self.doubleStratifyTribeMapCheck()
                 self.tribeSetup()
-                recursions += 1
+                self.recursions += 1
                 return #Not having this return allows the code to progress to the next line (randY = random...) before calling tribeSetup()
 
             randY = random.choice(viableLines)
@@ -158,6 +158,7 @@ class worldMap:
     def drawMap(self):
         color = '\033[94m'
         viewMap = ""
+        print(mapData)
         for y in range(len(mapData)):
             for x in range(len(mapData[y])):
                 viewMap += (self.tileToChr(mapData[y][x][0]) *2)
@@ -184,7 +185,7 @@ class worldMap:
         self.tribeSetup()
 
 tick = time.perf_counter()    
-theWorld = worldMap(18, 8)#change map spawn details here
+theWorld = worldMap(18, 10)#change map spawn details here
 theWorld.assemble()
 theWorld.drawMap()
 print(f"Recursions: {theWorld.recursions}")
